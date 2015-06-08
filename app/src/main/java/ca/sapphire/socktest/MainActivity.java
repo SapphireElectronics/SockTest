@@ -156,10 +156,14 @@ public class MainActivity extends ActionBarActivity {
     private String getLocalIpAddress() {
         try {
             for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+
+                Log.i("ServerActivity", en.toString());
+
                 NetworkInterface intf = en.nextElement();
                 for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
                     InetAddress inetAddress = enumIpAddr.nextElement();
-                    if (!inetAddress.isLoopbackAddress()) { return inetAddress.getHostAddress().toString(); }
+                    Log.i("ServerActivity", inetAddress.toString());
+                    if (!inetAddress.isLoopbackAddress()) { return inetAddress.toString(); }
                 }
             }
         } catch (SocketException ex) {
