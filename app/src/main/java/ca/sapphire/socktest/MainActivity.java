@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.ServerSocket;
@@ -110,17 +111,6 @@ public class MainActivity extends ActionBarActivity {
                                 });
                             }
 
-//                            BufferedWriter out = new BufferedWriter(new OutputStreamReader(client.getOutputStream()));
-//                            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
-                            OutputStreamWriter out = new OutputStreamWriter(client.getOutputStream());
-                            out.write( "HTTP/1.0 200 OK");
-                            out.write( "<html> ");
-                            out.write( "<body> ");
-                            out.write( "Connected to phone.");
-                            out.write( "</body> ");
-                            out.write( "</html> ");
-                            out.close();
-
                             break;
                         } catch (Exception e) {
                             handler.post(new Runnable() {
@@ -131,6 +121,17 @@ public class MainActivity extends ActionBarActivity {
                             });
                             e.printStackTrace();
                         }
+
+                        OutputStreamWriter out = new OutputStreamWriter(client.getOutputStream());
+                        out.write( "HTTP/1.0 200 OK");
+                        out.write( "<html> ");
+                        out.write( "<body> ");
+                        out.write( "Connected to phone.");
+                        out.write( "</body> ");
+                        out.write( "</html> ");
+                        out.flush();
+                        out.close();
+
                     }
                 } else {
                     handler.post(new Runnable() {
@@ -157,13 +158,11 @@ public class MainActivity extends ActionBarActivity {
         try {
             for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
 
-                Log.i("ServerActivity", en.toString());
-
                 NetworkInterface intf = en.nextElement();
                 for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
                     InetAddress inetAddress = enumIpAddr.nextElement();
                     Log.i("ServerActivity", inetAddress.toString());
-                    if (!inetAddress.isLoopbackAddress()) { return inetAddress.toString(); }
+                    if (!inetAddress.isLoopbackAddress() && inetAddress instanceof Inet4Address) { return inetAddress.toString(); }
                 }
             }
         } catch (SocketException ex) {
